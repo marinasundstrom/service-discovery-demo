@@ -12,6 +12,8 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddDiscoveryClient();
 
+// Any hardcoded URL is for demonstration purposes only. Please put them in appsettings.json!
+
 builder.Services
     .AddHttpClient("WebApi1", (httpClient) => httpClient.BaseAddress = new Uri("http://webapi1"))
     .AddServiceDiscovery();
