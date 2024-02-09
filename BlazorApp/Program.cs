@@ -1,21 +1,24 @@
 using BlazorApp.Components;
 
+using Steeltoe.Common.Http.Discovery;
+using Steeltoe.Discovery.Client;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddHttpClient("WebApi1", (httpClient) => httpClient.BaseAddress = new Uri("http://localhost:5137"));
 
-#region V1.2
-//builder.Services.AddHttpClient("WebApi2", (httpClient) => httpClient.BaseAddress = new Uri(builder.Configuration["WebApi1"]!));
-# endregion
+builder.Services.AddDiscoveryClient();
 
-#region V2
-//builder.Services.AddHttpClient("WebApi1", (httpClient) => httpClient.BaseAddress = new Uri(builder.Configuration["WebApi1"]!));
-//builder.Services.AddHttpClient("WebApi2", (httpClient) => httpClient.BaseAddress = new Uri(builder.Configuration["WebApi2"]!));
-#endregion
+builder.Services
+    .AddHttpClient("WebApi1", (httpClient) => httpClient.BaseAddress = new Uri("http://webapi1"))
+    .AddServiceDiscovery();
+
+builder.Services
+    .AddHttpClient("WebApi2", (httpClient) => httpClient.BaseAddress = new Uri("http://webapi2"))
+    .AddServiceDiscovery();
 
 var app = builder.Build();
 
